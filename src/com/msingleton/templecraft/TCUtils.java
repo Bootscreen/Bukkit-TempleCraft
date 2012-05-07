@@ -252,6 +252,11 @@ public class TCUtils
 				i++;
 			}
 			while(worldNames.contains(name));
+			while(new File(name).exists())
+			{
+				name = "TC"+type+"World_"+i;
+				i++;
+			}
 		}
 		return name;
 	}
@@ -920,7 +925,7 @@ public class TCUtils
 		}
 	}
 
-	private static boolean deleteFolder(File folder)
+	public static boolean deleteFolder(File folder)
 	{
 		boolean result = true;
 		try

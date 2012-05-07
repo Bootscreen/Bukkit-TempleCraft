@@ -180,7 +180,7 @@ public class TCRestore
 			int bytesRead;
 			try
 			{
-				if(dest.exists())
+				if(!dest.canWrite())
 				{
 					throw new IOException("copyFiles: " + dest.getAbsolutePath() + " already exists.");
 				}
@@ -196,9 +196,9 @@ public class TCRestore
 			catch (Exception e) //Error copying file... 
 			{ 
 				TCUtils.debugMessage("Unable to copy file: " + 
-						src.getAbsolutePath() + "to" + dest.getAbsolutePath()+".",Level.SEVERE);
+						src.getAbsolutePath() + " to " + dest.getAbsolutePath()+".",Level.SEVERE);
 				IOException wrapper = new IOException("copyFiles: Unable to copy file: " + 
-						src.getAbsolutePath() + "to" + dest.getAbsolutePath()+".");
+						src.getAbsolutePath() + " to " + dest.getAbsolutePath()+".");
 				wrapper.initCause(e);
 				wrapper.setStackTrace(e.getStackTrace());
 				throw wrapper;

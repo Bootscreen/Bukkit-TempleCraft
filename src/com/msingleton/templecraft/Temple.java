@@ -126,7 +126,13 @@ public class Temple
 		{
 			return null;
 		}
-
+		
+		File worldFolder = new File(worldName);
+		if(worldFolder.exists())
+		{
+			TCUtils.deleteFolder(worldFolder);
+		}
+		
 		File tcffile = new File("plugins/TempleCraft/SavedTemples/"+templeName+TempleCraft.fileExtention);
 
 		WorldCreator wc = new WorldCreator(worldName);
