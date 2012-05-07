@@ -161,6 +161,7 @@ public class TCCommands implements CommandExecutor
 				game.endGame();
 			}
 			TCUtils.deleteTempWorlds();
+			return true;
 		}
 
 		if (cmd.equals("save"))

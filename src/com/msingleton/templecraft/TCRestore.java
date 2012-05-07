@@ -180,6 +180,10 @@ public class TCRestore
 			int bytesRead;
 			try
 			{
+				if(dest.exists())
+				{
+					throw new IOException("copyFiles: " + dest.getAbsolutePath() + " already exists.");
+				}
 				//open the files for input and output
 				fin =  new FileInputStream(src);
 				fout = new FileOutputStream(dest);

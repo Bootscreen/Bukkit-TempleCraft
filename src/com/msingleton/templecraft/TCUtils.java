@@ -887,6 +887,12 @@ public class TCUtils
 			System.out.println("[TempleCraft] World \""+w.getName()+"\" unloaded!");
 		}
 		
+		TempleCraft.TCScheduler.scheduleSyncDelayedTask(TempleManager.plugin, new Runnable() {
+
+			   public void run() {
+			   }
+			}, 200L);
+
 		if(folder.exists())
 		{
 			debugMessage("start deleting " + folder.getAbsolutePath());
