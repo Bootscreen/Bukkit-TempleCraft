@@ -847,7 +847,7 @@ public class TCUtils
 		{
 			return false;
 		}
-		w.setAutoSave(false);
+		w.save();
 		File folder = new File(w.getName());
 		for(Entity e : w.getEntities())
 		{
