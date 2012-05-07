@@ -52,9 +52,9 @@ public class TempleCraft extends JavaPlugin
 	public static Logger debuglog;
 	public List<String> ENABLED_COMMANDS;
 	public double newVersion;
-    public double currentVersion;
+	public double currentVersion;
 	public String newVersionString;
-    public String currentVersionString;
+	public String currentVersionString;
 	public static BukkitScheduler TCScheduler = null;
 	public static TempleCraft TCPlugin = null;
 	public static Permission permission = null;
@@ -68,13 +68,13 @@ public class TempleCraft extends JavaPlugin
 	public static ChatColor c2 = ChatColor.WHITE;
 	public static ChatColor c3 = ChatColor.GREEN;
 	public static boolean debugMode = false;
-	
+
 	public void onEnable()
 	{	 	
 		PluginDescriptionFile pdfFile = this.getDescription();
-		
+
 		currentVersionString = pdfFile.getVersion();
-        currentVersion = TCUtils.convertVersion(currentVersionString);
+		currentVersion = TCUtils.convertVersion(currentVersionString);
 
 		log = getServer().getLogger();
 
@@ -86,28 +86,28 @@ public class TempleCraft extends JavaPlugin
 
 		TCScheduler = getServer().getScheduler();
 		TCPlugin = this;
-        // Schedule to check the version every 30 minutes for an update. This is to update the most recent 
-        // version so if an admin reconnects they will be warned about newer versions.
-        // Thanks Sleaker for the permission to use his updatecheck code from vault 
+		// Schedule to check the version every 30 minutes for an update. This is to update the most recent 
+		// version so if an admin reconnects they will be warned about newer versions.
+		// Thanks Sleaker for the permission to use his updatecheck code from vault 
 		this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
 
-            @Override
-            public void run() {
-                try {
-                    newVersionString = TCUtils.updateCheck(currentVersionString);
-                    currentVersion = TCUtils.convertVersion(currentVersionString);
-                    newVersion = TCUtils.convertVersion(newVersionString);
-                    if (newVersion > currentVersion) {
-                        log.warning("[" + getDescription().getName() + "] TempleCraft " + newVersionString + " is out! You are running: TempleCraft " + currentVersionString);
-                        log.warning("[" + getDescription().getName() + "] Update TempleCraft at: http://dev.bukkit.org/server-mods/templecraft-bootscreen");
-                    }
-                } catch (Exception e) {
-                	e.printStackTrace();
-                    // ignore exceptions
-                }
-            }
+			@Override
+			public void run() {
+				try {
+					newVersionString = TCUtils.updateCheck(currentVersionString);
+					currentVersion = TCUtils.convertVersion(currentVersionString);
+					newVersion = TCUtils.convertVersion(newVersionString);
+					if (newVersion > currentVersion) {
+						log.warning("[" + getDescription().getName() + "] TempleCraft " + newVersionString + " is out! You are running: TempleCraft " + currentVersionString);
+						log.warning("[" + getDescription().getName() + "] Update TempleCraft at: http://dev.bukkit.org/server-mods/templecraft-bootscreen");
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					// ignore exceptions
+				}
+			}
 
-        }, 0, 432000);
+		}, 0, 432000);
 
 		setupTranslations();
 		setupPermissions();
@@ -132,7 +132,7 @@ public class TempleCraft extends JavaPlugin
 		pm.registerEvents(new TCInventoryListener(), this);
 
 		System.out.println(Translation.tr("enableMessage", pdfFile.getName(), pdfFile.getVersion()));
-		
+
 		debugMode = TCUtils.getBoolean(TCUtils.getConfig("config"), "settings.debug", false);
 		if(debugMode)
 		{
@@ -146,8 +146,8 @@ public class TempleCraft extends JavaPlugin
 						SimpleDateFormat sd = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 						String dateString = sd.format(new Date(record.getMillis())); 
 						String split[] = record.getMessage().split(" - ", 4);
-				        return dateString + " " + split[0] + " " + split[1] + " Line " + split[2] + "\n"
-				        		+ record.getLevel() + ": " + split[3] + "\n\n";
+						return dateString + " " + split[0] + " " + split[1] + " Line " + split[2] + "\n"
+						+ record.getLevel() + ": " + split[3] + "\n\n";
 					}
 				});
 				debuglog = Logger.getAnonymousLogger();
@@ -181,10 +181,13 @@ public class TempleCraft extends JavaPlugin
 	public void onDisable()
 	{
 		TCUtils.debugMessage("Debug beendet.");
-		for(Handler h :debuglog.getHandlers())
-		{
-			debuglog.removeHandler(h);
-			h.close();
+		if(debuglog != null)
+		{		
+			for(Handler h :debuglog.getHandlers())
+			{
+				debuglog.removeHandler(h);
+				h.close();
+			}
 		}
 		//permissionHandler = null;
 		TempleManager.SBManager.save();
@@ -234,7 +237,7 @@ public class TempleCraft extends JavaPlugin
 			System.out.println("[TempleCraft] Hooked into " + Cataplugin.getDescription().getName() + " Version "+ Cataplugin.getDescription().getVersion());
 		}
 	}
-		
+
 	private Boolean setupPermissions()
 	{
 		RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
