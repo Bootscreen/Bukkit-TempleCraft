@@ -136,6 +136,7 @@ public class TCRestore
 	 */
 	public static void copyFiles(File src, File dest) throws IOException 
 	{	
+		TCUtils.debugMessage("try copying: " + src.getAbsolutePath() + " > " + dest.getAbsolutePath());
 		if (!src.exists()) //Check to ensure that the source is valid...
 		{
 			TCUtils.debugMessage("Can not find source: " + src.getAbsolutePath()+".",Level.SEVERE);
@@ -180,7 +181,7 @@ public class TCRestore
 			int bytesRead;
 			try
 			{
-				if(!dest.canWrite())
+				if(dest.exists() && !dest.canWrite())
 				{
 					throw new IOException("copyFiles: " + dest.getAbsolutePath() + " already exists.");
 				}
@@ -196,9 +197,9 @@ public class TCRestore
 			catch (Exception e) //Error copying file... 
 			{ 
 				TCUtils.debugMessage("Unable to copy file: " + 
-						src.getAbsolutePath() + " to " + dest.getAbsolutePath()+".",Level.SEVERE);
+						src.getAbsolutePath() + " > " + dest.getAbsolutePath()+".",Level.SEVERE);
 				IOException wrapper = new IOException("copyFiles: Unable to copy file: " + 
-						src.getAbsolutePath() + " to " + dest.getAbsolutePath()+".");
+						src.getAbsolutePath() + " > " + dest.getAbsolutePath()+".");
 				wrapper.initCause(e);
 				wrapper.setStackTrace(e.getStackTrace());
 				throw wrapper;
