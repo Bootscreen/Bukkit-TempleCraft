@@ -63,6 +63,7 @@ public class TempleCraft extends JavaPlugin
 	public static Permission permission = null;
 	public static MVWorldManager MVWM = null;
 	public static Catacombs catacombs = null;
+	//public static WorldGuardPlugin worldguard = null;
 	public static Economy economy = null;
 	public static CharacterManager heroManager;
 	public static String language;
@@ -118,6 +119,7 @@ public class TempleCraft extends JavaPlugin
 		setupHeroes();
 		setupMultiverse();
 		setupCatacombs();
+		//setupWorldguard();
 
 		ENABLED_COMMANDS = TCUtils.getEnabledCommands();
 
@@ -137,9 +139,9 @@ public class TempleCraft extends JavaPlugin
 		pm.registerEvents(new TCWorldListener(), this);
 
 		WorldManager.init();
-		
+
 		System.out.println(Translation.tr("enableMessage", pdfFile.getName(), pdfFile.getVersion()));
-		
+
 		debugMode = TCUtils.getBoolean(TCUtils.getConfig("config"), "settings.debug", false);
 		if(debugMode)
 		{
@@ -164,7 +166,7 @@ public class TempleCraft extends JavaPlugin
 					debuglog.removeHandler(h);
 				}
 				debuglog.addHandler(fh);
-				System.out.println("[TempleCraft] DEBUG MODE enabled.");
+				System.out.print("[TempleCraft] DEBUG MODE enabled.");
 				String message = "Debug gestartet. Liste aller Plugins:\n";
 				for(Plugin pl : getServer().getPluginManager().getPlugins())
 				{
@@ -240,15 +242,22 @@ public class TempleCraft extends JavaPlugin
 	private void setupCatacombs()
 	{
 		Plugin Cataplugin = this.getServer().getPluginManager().getPlugin("Catacombs");
-		if (Cataplugin == null)
+		if (Cataplugin != null)
 		{
-			return;
-		}
-		else
-		{
-			System.out.println("[TempleCraft] Hooked into " + Cataplugin.getDescription().getName() + " Version "+ Cataplugin.getDescription().getVersion());
+			catacombs = (Catacombs) Cataplugin;
+			log.info("[TempleCraft] Hooked into " + Cataplugin.getDescription().getName() + " Version "+ Cataplugin.getDescription().getVersion());
 		}
 	}
+
+	/*private void setupWorldguard()
+	{
+		Plugin wgplugin = getServer().getPluginManager().getPlugin("WorldGuard");
+		if (wgplugin != null)
+		{
+			worldguard = (WorldGuardPlugin) wgplugin;
+			System.out.print("[TempleCraft] Hooked into " + wgplugin.getDescription().getName() + " Version "+ wgplugin.getDescription().getVersion());
+		}
+	}*/
 
 	private Boolean setupPermissions()
 	{

@@ -16,6 +16,23 @@ public class TCWorldListener implements Listener
 		if (!event.isCancelled() && TCUtils.isTCWorld(event.getWorld()))
 		{
 			WorldManager.clearWorldReference(event.getWorld());
+			
+			/*if(TempleCraft.worldguard != null)
+			{
+				TempleCraft.worldguard.getGlobalRegionManager().unload(event.getWorld().getName());
+			}*/
 		}
 	}
+
+	/*@EventHandler
+	public void onWorldLoad(WorldLoadEvent event) 
+	{
+		if (TCUtils.isTCWorld(event.getWorld()))
+		{
+			if(TempleCraft.worldguard != null)
+			{
+				TempleCraft.worldguard.getGlobalRegionManager().unload(event.getWorld().getName());
+			}
+		}
+	}*/
 }

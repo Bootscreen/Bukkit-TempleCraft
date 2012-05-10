@@ -1417,6 +1417,7 @@ public class Game
 
 	public void hitEndBlock(Player p)
 	{
+		TCUtils.debugMessage("Player " + p.getName() + "hit EndBlock");
 		TemplePlayer tp = TempleManager.templePlayerMap.get(p);
 		if (playerSet.contains(p))
 		{				

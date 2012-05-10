@@ -191,6 +191,7 @@ public class TCPlayerListener implements Listener
 		}
 		else if (!game.deadSet.contains(p) && b.getTypeId() == 41 && game.endLocSet.contains(b.getLocation()))
 		{
+			event.setCancelled(true);
 			game.hitEndBlock(p);
 			return;
 		}

@@ -136,7 +136,7 @@ public class TCUtils
 		player.setTotalExperience(originalContents.getExperience());
 		player.setGameMode(originalContents.getGameMode());
 	}
-	
+
 	public static void addtoPlayerInventory(Player player, ItemStack item)
 	{
 		InventoryStash Contents = inventories.get(player.getName());
@@ -338,10 +338,10 @@ public class TCUtils
 	{
 		YamlConfiguration c = YamlConfiguration.loadConfiguration(configFile);
 
-		
+
 		String result = c.getString(path, def);
 		c.set(path, result);
-		
+
 		try
 		{
 			c.save(configFile);
@@ -513,13 +513,13 @@ public class TCUtils
 			}
 		}
 		Object[] array = nearby_players.toArray();
-		
+
 		Player p = null;
 		if(array.length > 0)
 		{
 			p = (Player) array[random.nextInt(array.length)];
 		}
-		
+
 		return p;
 	}
 
@@ -817,7 +817,7 @@ public class TCUtils
 		TCUtils.setInt(getConfig("temples"),"Temples."+temple.templeName+".maxPlayersPerGame", value);
 		temple.maxPlayersPerGame = value;
 	}
-	
+
 	public static void setTempleMaxDeaths(Temple temple, int value)
 	{
 		TCUtils.setInt(getConfig("temples"),"Temples."+temple.templeName+".maxDeaths", value);
@@ -952,7 +952,15 @@ public class TCUtils
 			debugMessage("start deleting " + folder.getAbsolutePath());
 			if(!deleteFolder(folder))
 			{
-				debugMessage("error while deleting " + folder.getAbsolutePath());
+				if(!deleteFolder(folder))
+				{
+					debugMessage("error while deleting " + folder.getAbsolutePath());
+				}
+				else
+				{
+					debugMessage(folder.getAbsolutePath() + " deleted.");
+					System.out.println("[TempleCraft] World \""+w.getName()+"\" deleted!");
+				}
 			}
 			else
 			{
@@ -1583,7 +1591,7 @@ public class TCUtils
 	{
 		debugMessage(Thread.currentThread().getStackTrace()[2].getClassName() + " - " + Thread.currentThread().getStackTrace()[2].getMethodName() + " - " + Thread.currentThread().getStackTrace()[2].getLineNumber() + " - " + message, Level.INFO);
 	}
-	
+
 	public static void debugMessage(String message, Level loglevel)
 	{
 		if (TempleCraft.debugMode)
