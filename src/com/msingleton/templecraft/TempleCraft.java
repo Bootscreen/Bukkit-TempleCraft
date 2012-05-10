@@ -40,6 +40,7 @@ import com.msingleton.templecraft.util.Translation;
 import com.msingleton.templecraft.util.WorldManager;
 import com.onarandombox.MultiverseCore.MultiverseCore;
 import com.onarandombox.MultiverseCore.api.MVWorldManager;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 /**
  * TempleCraft
@@ -63,7 +64,7 @@ public class TempleCraft extends JavaPlugin
 	public static Permission permission = null;
 	public static MVWorldManager MVWM = null;
 	public static Catacombs catacombs = null;
-	//public static WorldGuardPlugin worldguard = null;
+	public static WorldGuardPlugin worldguard = null;
 	public static Economy economy = null;
 	public static CharacterManager heroManager;
 	public static String language;
@@ -119,7 +120,7 @@ public class TempleCraft extends JavaPlugin
 		setupHeroes();
 		setupMultiverse();
 		setupCatacombs();
-		//setupWorldguard();
+		setupWorldguard();
 
 		ENABLED_COMMANDS = TCUtils.getEnabledCommands();
 
@@ -249,7 +250,7 @@ public class TempleCraft extends JavaPlugin
 		}
 	}
 
-	/*private void setupWorldguard()
+	private void setupWorldguard()
 	{
 		Plugin wgplugin = getServer().getPluginManager().getPlugin("WorldGuard");
 		if (wgplugin != null)
@@ -257,7 +258,7 @@ public class TempleCraft extends JavaPlugin
 			worldguard = (WorldGuardPlugin) wgplugin;
 			System.out.print("[TempleCraft] Hooked into " + wgplugin.getDescription().getName() + " Version "+ wgplugin.getDescription().getVersion());
 		}
-	}*/
+	}
 
 	private Boolean setupPermissions()
 	{

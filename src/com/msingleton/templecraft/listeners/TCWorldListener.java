@@ -3,9 +3,11 @@ package com.msingleton.templecraft.listeners;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
 
 import com.msingleton.templecraft.TCUtils;
+import com.msingleton.templecraft.TempleCraft;
 import com.msingleton.templecraft.util.WorldManager;
 
 public class TCWorldListener implements Listener
@@ -17,14 +19,14 @@ public class TCWorldListener implements Listener
 		{
 			WorldManager.clearWorldReference(event.getWorld());
 			
-			/*if(TempleCraft.worldguard != null)
+			if(TempleCraft.worldguard != null)
 			{
 				TempleCraft.worldguard.getGlobalRegionManager().unload(event.getWorld().getName());
-			}*/
+			}
 		}
 	}
 
-	/*@EventHandler
+	@EventHandler
 	public void onWorldLoad(WorldLoadEvent event) 
 	{
 		if (TCUtils.isTCWorld(event.getWorld()))
@@ -34,5 +36,5 @@ public class TCWorldListener implements Listener
 				TempleCraft.worldguard.getGlobalRegionManager().unload(event.getWorld().getName());
 			}
 		}
-	}*/
+	}
 }

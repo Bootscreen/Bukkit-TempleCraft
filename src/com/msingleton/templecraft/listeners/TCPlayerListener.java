@@ -8,6 +8,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityTameEvent;
@@ -21,18 +22,20 @@ import org.bukkit.inventory.ItemStack;
 import com.msingleton.templecraft.TCPermissionHandler;
 import com.msingleton.templecraft.TCUtils;
 import com.msingleton.templecraft.Temple;
+import com.msingleton.templecraft.TempleCraft;
 import com.msingleton.templecraft.TempleManager;
 import com.msingleton.templecraft.TemplePlayer;
 import com.msingleton.templecraft.games.Arena;
 import com.msingleton.templecraft.games.Game;
 import com.msingleton.templecraft.games.Spleef;
 import com.msingleton.templecraft.scoreboards.ScoreBoard;
+import com.msingleton.templecraft.tasks.EndTask;
 import com.msingleton.templecraft.util.Translation;
 
 //public class TCPlayerListener  extends PlayerListener
 public class TCPlayerListener implements Listener
 {
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerInteract(PlayerInteractEvent event)
 	{	
 
@@ -191,8 +194,8 @@ public class TCPlayerListener implements Listener
 		}
 		else if (!game.deadSet.contains(p) && b.getTypeId() == 41 && game.endLocSet.contains(b.getLocation()))
 		{
+			TempleCraft.TCScheduler.scheduleAsyncDelayedTask(TempleCraft.TCPlugin, new EndTask(game, p), 100L);
 			event.setCancelled(true);
-			game.hitEndBlock(p);
 			return;
 		}
 	}

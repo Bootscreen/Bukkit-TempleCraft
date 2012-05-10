@@ -3,7 +3,7 @@ author: Bootscreen
 authors: [Mike Singleton]
 main: com.msingleton.templecraft.TempleCraft
 depend: [Vault]
-softdepend: [Heroes,Multiverse-Core,Catacombs]
+softdepend: [Heroes,Multiverse-Core,Catacombs,WorldGuard]
 version: 0.45.3
 dev-url: http://dev.bukkit.org/server-mods/templecraft-bootscreen/
 
