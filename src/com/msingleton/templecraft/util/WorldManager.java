@@ -133,6 +133,8 @@ public class WorldManager
 					}
 					catch (Exception ex) 
 					{
+						TempleCraft.TCPlugin.log.warning("[TempleCraft] Exception while removing world reference for '" + worldname + "'!");
+						TCUtils.debugMessage("Exception while removing world reference for '" + worldname + "'!\n" + ex.getMessage(), Level.WARNING);
 						ex.printStackTrace();
 					}
 				}
