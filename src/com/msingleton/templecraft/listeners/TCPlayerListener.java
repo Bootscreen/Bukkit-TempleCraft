@@ -196,7 +196,6 @@ public class TCPlayerListener implements Listener
 		}
 	}
 
-	
 	@EventHandler
 	public void onPlayerTeleport(PlayerTeleportEvent event)
 	{
@@ -345,8 +344,17 @@ public class TCPlayerListener implements Listener
 		{
 			if(!game.isRunning && game.maxPlayers != game.playerSet.size() && game.gameName.contains(temple.templeName) && game.gameName.contains(mode.substring(0,3)))
 			{
-				game.playerJoin(p);
-				return;
+				if(game.maxdeaths > -1 &&
+					game.playerDeathMap.containsKey(p) &&
+					game.playerDeathMap.get(p) > game.maxdeaths)
+				{
+					TempleManager.tellPlayer(p, Translation.tr("game.tooMuchDeaths"));
+				}
+				else
+				{
+					game.playerJoin(p);
+					return;
+				}
 			}
 		}
 

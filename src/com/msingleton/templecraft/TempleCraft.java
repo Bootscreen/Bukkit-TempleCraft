@@ -27,14 +27,17 @@ import org.bukkit.scheduler.BukkitScheduler;
 import com.herocraftonline.heroes.Heroes;
 import com.herocraftonline.heroes.characters.CharacterManager;
 import com.msingleton.templecraft.listeners.TCBlockListener;
+import com.msingleton.templecraft.listeners.TCChunkListener;
 import com.msingleton.templecraft.listeners.TCDamageListener;
 import com.msingleton.templecraft.listeners.TCDisconnectListener;
 import com.msingleton.templecraft.listeners.TCInventoryListener;
 import com.msingleton.templecraft.listeners.TCMonsterListener;
 import com.msingleton.templecraft.listeners.TCPlayerListener;
 import com.msingleton.templecraft.listeners.TCTeleportListener;
+import com.msingleton.templecraft.listeners.TCWorldListener;
 import com.msingleton.templecraft.util.MobArenaClasses;
 import com.msingleton.templecraft.util.Translation;
+import com.msingleton.templecraft.util.WorldManager;
 import com.onarandombox.MultiverseCore.MultiverseCore;
 import com.onarandombox.MultiverseCore.api.MVWorldManager;
 
@@ -121,18 +124,22 @@ public class TempleCraft extends JavaPlugin
 		// Bind the /tc and /tcraft commands to MACommands.
 		getCommand("tct").setExecutor(new TCCommands(this));
 
-		pm.registerEvents(new TCEnabledCommands(this), this);
-		pm.registerEvents(new TCPlayerListener(), this);
 		pm.registerEvents(new MobArenaClasses(this), this);
-		pm.registerEvents(new TCTeleportListener(), this);
-		pm.registerEvents(new TCDisconnectListener(this), this);
 		pm.registerEvents(new TCBlockListener(), this);
+		pm.registerEvents(new TCChunkListener(), this);
 		pm.registerEvents(new TCDamageListener(), this);
-		pm.registerEvents(new TCMonsterListener(this), this);
+		pm.registerEvents(new TCDisconnectListener(this), this);
+		pm.registerEvents(new TCEnabledCommands(this), this);
 		pm.registerEvents(new TCInventoryListener(), this);
+		pm.registerEvents(new TCMonsterListener(this), this);
+		pm.registerEvents(new TCPlayerListener(), this);
+		pm.registerEvents(new TCTeleportListener(), this);
+		pm.registerEvents(new TCWorldListener(), this);
 
+		WorldManager.init();
+		
 		System.out.println(Translation.tr("enableMessage", pdfFile.getName(), pdfFile.getVersion()));
-
+		
 		debugMode = TCUtils.getBoolean(TCUtils.getConfig("config"), "settings.debug", false);
 		if(debugMode)
 		{
@@ -176,6 +183,9 @@ public class TempleCraft extends JavaPlugin
 				e.printStackTrace();
 			}
 		}
+
+		TCUtils.deleteTempWorlds();
+		TCUtils.deleteTempWorldFolders();
 	}
 
 	public void onDisable()
@@ -194,6 +204,8 @@ public class TempleCraft extends JavaPlugin
 		TempleManager.removeAll();
 		TCUtils.deleteTempWorlds();
 		TCUtils.cleanConfigFiles();
+
+		WorldManager.deinit();
 	}
 
 	private void setupTranslations()

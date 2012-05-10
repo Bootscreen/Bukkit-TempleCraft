@@ -454,16 +454,55 @@ public class TCCommands implements CommandExecutor
 		
 		if ((cmd.equals("finishloc") || cmd.equals("fl")) && TCPermissionHandler.hasPermission(p, "templecraft.edittemple"))
 		{
-			Temple temple = TCUtils.getTempleByName(arg);
+			Temple temple = tp.currentTemple;
+
+			if(temple != null)
+			{
+				TempleManager.tellPlayer(p, Translation.tr("mustNotBeEditing"));
+				return true;
+			}
+			
+			temple = TCUtils.getTempleByName(arg);
 
 			if(temple == null)
 			{
 				TempleManager.tellPlayer(p, Translation.tr("templeDNE", arg));
 				return true;
 			}
+
+			if(args[2].equals("delete") || args[2].equals("del"))
+			{
+				TCUtils.setFinishLocation(temple, null);
+				TempleManager.tellPlayer(p, Translation.tr("templeFinishLocDel",arg));
+			}
+			else
+			{
+				TCUtils.setFinishLocation(temple, p.getLocation());
+				TempleManager.tellPlayer(p, Translation.tr("templeFinishLocSet",arg));
+			}
+			return true;
+		}
+		
+		if ((cmd.equals("setmaxdeaths") || cmd.equals("smd")) && TCPermissionHandler.hasPermission(p, "templecraft.edittemple"))
+		{
+			Temple temple = tp.currentTemple;
+
+			if(temple == null)
+			{
+				TempleManager.tellPlayer(p, Translation.tr("mustBeEditing"));
+				return true;
+			}
+
+			int maxdeaths = -1;
+			try
+			{
+				maxdeaths = Integer.parseInt(arg);
+			}
+			catch (Exception e) {}
 			
-			TCUtils.setFinishLocation(temple, p.getLocation());
-			TempleManager.tellPlayer(p, Translation.tr("templeFinishLocSet",arg));
+			TCUtils.setTempleMaxDeaths(temple, maxdeaths);
+			TempleManager.tellPlayer(p, Translation.tr("templemaxDeathsSet",maxdeaths));
+
 			return true;
 		}
 
@@ -482,17 +521,44 @@ public class TCCommands implements CommandExecutor
 				try
 				{
 					c.save(messageFile);
-					TempleManager.tellPlayer(p, "Text added.");
+					TempleManager.tellPlayer(p, Translation.tr("textadded"));
 				}
 				catch (IOException e)
 				{
-					TempleManager.tellPlayer(p, "Could not perform command.");
+					TempleManager.tellPlayer(p, Translation.tr("commandnotperformed"));
 					e.printStackTrace();
 				}
 			}
 			catch (Exception e) 
 			{
-				TempleManager.tellPlayer(p, "Could not perform command.");
+				TempleManager.tellPlayer(p, Translation.tr("commandnotperformed"));
+			}
+			return true;
+		}
+		if ((cmd.equals("textremove") || cmd.equals("tr")) && TCPermissionHandler.hasPermission(p, "templecraft.edittemple"))
+		{
+			try
+			{
+				File messageFile = TCUtils.getConfig("messages");
+				YamlConfiguration c = YamlConfiguration.loadConfiguration(messageFile);
+				if(c.contains(arg))
+				{
+					c.set(arg, null);
+					try
+					{
+						c.save(messageFile);
+						TempleManager.tellPlayer(p, Translation.tr("textremoved"));
+					}
+					catch (IOException e)
+					{
+						TempleManager.tellPlayer(p, Translation.tr("commandnotperformed"));
+						e.printStackTrace();
+					}
+				}
+			}
+			catch (Exception e) 
+			{
+				TempleManager.tellPlayer(p, Translation.tr("commandnotperformed"));
 			}
 			return true;
 		}

@@ -136,6 +136,13 @@ public class TCUtils
 		player.setTotalExperience(originalContents.getExperience());
 		player.setGameMode(originalContents.getGameMode());
 	}
+	
+	public static void addtoPlayerInventory(Player player, ItemStack item)
+	{
+		InventoryStash Contents = inventories.get(player.getName());
+		Contents.addContent(item);
+		inventories.put(player.getName(), Contents);
+	}
 
 	private static void playerInvFromInventoryStash(PlayerInventory playerInv, InventoryStash originalContents)
 	{
@@ -182,7 +189,7 @@ public class TCUtils
 	{
 		new File("plugins/TempleCraft").mkdir();
 		File configFile = new File("plugins/TempleCraft/"+name+".yml");
-		
+
 		try
 		{
 			if(!configFile.exists())
@@ -193,8 +200,8 @@ public class TCUtils
 			System.out.println("[TempleCraft] ERROR: Config file could not be created.");
 			return null;
 		}
-		
-		
+
+
 		return configFile;
 	}
 
@@ -252,10 +259,15 @@ public class TCUtils
 				i++;
 			}
 			while(worldNames.contains(name));
-			while(new File(name).exists())
+			File worldfolder =  new File(name);
+			while(worldfolder.exists())
 			{
-				name = "TC"+type+"World_"+i;
-				i++;
+				if(!deleteFolder(worldfolder))
+				{
+					name = "TC"+type+"World_"+i;
+					worldfolder =  new File(name);
+					i++;
+				}
 			}
 		}
 		return name;
@@ -326,9 +338,10 @@ public class TCUtils
 	{
 		YamlConfiguration c = YamlConfiguration.loadConfiguration(configFile);
 
+		
 		String result = c.getString(path, def);
 		c.set(path, result);
-
+		
 		try
 		{
 			c.save(configFile);
@@ -383,6 +396,20 @@ public class TCUtils
 
 		c.set(path, key);
 
+		try
+		{
+			c.save(configFile);
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public static void removeValue(File configFile, String path)
+	{
+		YamlConfiguration c = YamlConfiguration.loadConfiguration(configFile);
+		c.set(path, null);
 		try
 		{
 			c.save(configFile);
@@ -457,7 +484,7 @@ public class TCUtils
 		Object[] array = TempleManager.server.getOnlinePlayers();
 		return (Player) array[random.nextInt(array.length)];
 	}
-	
+
 	/**
 	 * Turns the current set of players in the game into an array, and grabs a random
 	 * element out of it.
@@ -468,7 +495,7 @@ public class TCUtils
 		Object[] array = game.playerSet.toArray();
 		return (Player) array[random.nextInt(array.length)];
 	}
-	
+
 	/**
 	 * Turns the current set of players in the game into an array, and grabs a random
 	 * element out of it.
@@ -486,7 +513,14 @@ public class TCUtils
 			}
 		}
 		Object[] array = nearby_players.toArray();
-		return (Player) array[random.nextInt(array.length)];
+		
+		Player p = null;
+		if(array.length > 0)
+		{
+			p = (Player) array[random.nextInt(array.length)];
+		}
+		
+		return p;
 	}
 
 	/* ///////////////////////////////////////////////////////////////////// //
@@ -784,14 +818,32 @@ public class TCUtils
 		temple.maxPlayersPerGame = value;
 	}
 	
+	public static void setTempleMaxDeaths(Temple temple, int value)
+	{
+		TCUtils.setInt(getConfig("temples"),"Temples."+temple.templeName+".maxDeaths", value);
+		temple.maxDeaths = value;
+	}
+
 	public static void setFinishLocation(Temple temple, Location loc)
 	{
-		TCUtils.setString(getConfig("temples"),"Temples."+temple.templeName+".finishLocation.world", loc.getWorld().getName());
-		TCUtils.setDouble(getConfig("temples"),"Temples."+temple.templeName+".finishLocation.x", loc.getX());
-		TCUtils.setDouble(getConfig("temples"),"Temples."+temple.templeName+".finishLocation.y", loc.getY());
-		TCUtils.setDouble(getConfig("temples"),"Temples."+temple.templeName+".finishLocation.z", loc.getZ());
-		TCUtils.setDouble(getConfig("temples"),"Temples."+temple.templeName+".finishLocation.pitch", loc.getPitch());
-		TCUtils.setDouble(getConfig("temples"),"Temples."+temple.templeName+".finishLocation.yaw", loc.getYaw());
+		if(loc != null)
+		{
+			TCUtils.setString(getConfig("temples"),"Temples."+temple.templeName+".finishLocation.world", loc.getWorld().getName());
+			TCUtils.setDouble(getConfig("temples"),"Temples."+temple.templeName+".finishLocation.x", loc.getX());
+			TCUtils.setDouble(getConfig("temples"),"Temples."+temple.templeName+".finishLocation.y", loc.getY());
+			TCUtils.setDouble(getConfig("temples"),"Temples."+temple.templeName+".finishLocation.z", loc.getZ());
+			TCUtils.setDouble(getConfig("temples"),"Temples."+temple.templeName+".finishLocation.pitch", loc.getPitch());
+			TCUtils.setDouble(getConfig("temples"),"Temples."+temple.templeName+".finishLocation.yaw", loc.getYaw());
+		}
+		else
+		{
+			TCUtils.removeValue(getConfig("temples"),"Temples."+temple.templeName+".finishLocation.world");
+			TCUtils.removeValue(getConfig("temples"),"Temples."+temple.templeName+".finishLocation.x");
+			TCUtils.removeValue(getConfig("temples"),"Temples."+temple.templeName+".finishLocation.y");
+			TCUtils.removeValue(getConfig("temples"),"Temples."+temple.templeName+".finishLocation.z");
+			TCUtils.removeValue(getConfig("temples"),"Temples."+temple.templeName+".finishLocation.pitch");
+			TCUtils.removeValue(getConfig("temples"),"Temples."+temple.templeName+".finishLocation.yaw");			
+		}
 		temple.finishLocation = loc;
 	}
 
@@ -841,6 +893,7 @@ public class TCUtils
 
 	public static boolean deleteTempWorld(World w)
 	{
+		//TODO: optimze -.-
 		debugMessage("try deleting World " + w.getName());
 		removePlayers(w);
 		if(w == null || !w.getPlayers().isEmpty())
@@ -853,17 +906,19 @@ public class TCUtils
 		{
 			e.remove();
 		}
-		
+
 		for (Chunk chunk : w.getLoadedChunks())
 		{
 			w.unloadChunk(chunk);
 		}
-		
+
 		if(TempleCraft.catacombs != null)
 		{
 			TempleCraft.catacombs.unloadWorld(w.getName());
 		}
-		
+
+		/**/
+
 		if(TempleCraft.MVWM != null)
 		{
 			if(TempleCraft.MVWM.isMVWorld(w.getName()))
@@ -880,7 +935,7 @@ public class TCUtils
 		{
 			TempleManager.server.unloadWorld(w, true);
 		}
-		
+
 		if(TempleManager.server.getWorld(w.getName()) != null)
 		{
 			debugMessage("error while unloading " + w.getName());
@@ -891,12 +946,6 @@ public class TCUtils
 		{
 			System.out.println("[TempleCraft] World \""+w.getName()+"\" unloaded!");
 		}
-		
-		TempleCraft.TCScheduler.scheduleSyncDelayedTask(TempleManager.plugin, new Runnable() {
-
-			   public void run() {
-			   }
-			}, 200L);
 
 		if(folder.exists())
 		{
@@ -907,10 +956,16 @@ public class TCUtils
 			}
 			else
 			{
+				debugMessage(folder.getAbsolutePath() + " deleted.");
 				System.out.println("[TempleCraft] World \""+w.getName()+"\" deleted!");
 			}
 		}
-		
+
+		if(folder.exists())
+		{
+			return false;
+		}
+
 		return true;
 	}
 
@@ -920,7 +975,20 @@ public class TCUtils
 		{
 			if(TCUtils.isTCWorld(w))
 			{
+				debugMessage(w.getName() + " is TC World, try to delete it.");
 				deleteTempWorld(w);
+			}
+		}
+	}
+
+	public static void deleteTempWorldFolders()
+	{
+		for(File f : TempleManager.server.getWorldContainer().listFiles())
+		{
+			if(TCUtils.isTCWorldFolder(f))
+			{
+				debugMessage(f.getAbsolutePath() + " is TC World Folder, try to delete it.");
+				deleteFolder(f);
 			}
 		}
 	}
@@ -930,8 +998,8 @@ public class TCUtils
 		boolean result = true;
 		try
 		{
-	        if (folder.exists()) 
-	        {
+			if (folder.exists()) 
+			{
 				if(folder.isDirectory())
 				{
 					for(File f : folder.listFiles())
@@ -941,11 +1009,11 @@ public class TCUtils
 				}
 				result = result && folder.delete();
 				return result;
-	        }
-	        else
-	        {
-	        	return false;
-	        }
+			}
+			else
+			{
+				return false;
+			}
 		}
 		catch(Exception e)
 		{
@@ -1167,54 +1235,54 @@ public class TCUtils
 	 * Checks if there is a new update of TempleCraft and notifies the
 	 * Thanks Sleaker for the permission to use his updatecheck code from vault
 	 */
-    public static String updateCheck(String currentVersion) throws Exception {
-        String pluginUrlString = "http://dev.bukkit.org/server-mods/templecraft-bootscreen/files.rss";
-        try {
-            URL url = new URL(pluginUrlString);
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            if(con.getResponseCode() == 200)
-            {
-	            Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(url.openConnection().getInputStream());
-	            doc.getDocumentElement().normalize();
-	            NodeList nodes = doc.getElementsByTagName("item");
-	            Node firstNode = nodes.item(0);
-	            if (firstNode.getNodeType() == 1) 
-	            {
-	                Element firstElement = (Element)firstNode;
-	                NodeList firstElementTagName = firstElement.getElementsByTagName("title");
-	                Element firstNameElement = (Element) firstElementTagName.item(0);
-	                NodeList firstNodes = firstNameElement.getChildNodes();
-	                return firstNodes.item(0).getNodeValue().replace("Templecraft v", "");
-	            }
-            }
-            else
-            {
-            	System.err.println("[TempleCraft] Can't check http://dev.bukkit.org/server-mods/templecraft-bootscreen/files.rss for updates");
-            }
-        }
-        catch (SocketException localException)
-        {
-        	System.err.println("[TempleCraft] Can't check http://dev.bukkit.org/server-mods/templecraft-bootscreen/files.rss for updates");
-        }
-        catch (Exception localException)
-        {
-        	localException.printStackTrace();
-        }
-        return currentVersion;
-    }
-    
-    public static double convertVersion(String Version)
-    {
-    	try
-    	{
+	public static String updateCheck(String currentVersion) throws Exception {
+		String pluginUrlString = "http://dev.bukkit.org/server-mods/templecraft-bootscreen/files.rss";
+		try {
+			URL url = new URL(pluginUrlString);
+			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			if(con.getResponseCode() == 200)
+			{
+				Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(url.openConnection().getInputStream());
+				doc.getDocumentElement().normalize();
+				NodeList nodes = doc.getElementsByTagName("item");
+				Node firstNode = nodes.item(0);
+				if (firstNode.getNodeType() == 1) 
+				{
+					Element firstElement = (Element)firstNode;
+					NodeList firstElementTagName = firstElement.getElementsByTagName("title");
+					Element firstNameElement = (Element) firstElementTagName.item(0);
+					NodeList firstNodes = firstNameElement.getChildNodes();
+					return firstNodes.item(0).getNodeValue().replace("Templecraft v", "");
+				}
+			}
+			else
+			{
+				System.err.println("[TempleCraft] Can't check http://dev.bukkit.org/server-mods/templecraft-bootscreen/files.rss for updates");
+			}
+		}
+		catch (SocketException localException)
+		{
+			System.err.println("[TempleCraft] Can't check http://dev.bukkit.org/server-mods/templecraft-bootscreen/files.rss for updates");
+		}
+		catch (Exception localException)
+		{
+			localException.printStackTrace();
+		}
+		return currentVersion;
+	}
+
+	public static double convertVersion(String Version)
+	{
+		try
+		{
 			String[] version = Version.split("\\.", 2);
-	        return Double.valueOf(version[0] + "." + version[1].replace(".", ""));
-    	}
-    	catch(Exception e)
-    	{}
-    	return 0;
-    }
-    
+			return Double.valueOf(version[0] + "." + version[1].replace(".", ""));
+		}
+		catch(Exception e)
+		{}
+		return 0;
+	}
+
 	public static void sendDeathMessage(Game game, Entity entity, Entity entity2)
 	{
 
@@ -1313,6 +1381,16 @@ public class TCUtils
 	public static boolean isTCWorld(World world)
 	{
 		String name = world.getName();
+		if(name.startsWith("TCTempleWorld_") || name.startsWith("TCEditWorld_") || name.startsWith("TCConvertWorld_"))
+		{
+			return true;
+		}
+		return false;
+	}
+
+	public static boolean isTCWorldFolder(File worldFolder)
+	{
+		String name = worldFolder.getName();
 		if(name.startsWith("TCTempleWorld_") || name.startsWith("TCEditWorld_") || name.startsWith("TCConvertWorld_"))
 		{
 			return true;
@@ -1478,7 +1556,7 @@ public class TCUtils
 		}
 		p.setHealth(MAX_HEALTH);
 	}
-	
+
 	/**
 	 * Get the target player of the LivingEntity if possible.
 	 * @param entity The entity whose target to get
@@ -1520,6 +1598,6 @@ public class TCUtils
 			}
 		}
 	}
-	
-	
+
+
 }

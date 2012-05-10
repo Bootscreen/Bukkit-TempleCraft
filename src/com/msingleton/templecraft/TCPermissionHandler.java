@@ -29,9 +29,13 @@ public class TCPermissionHandler {
 		c1+"/tct save"+c2+"			   - Save the current temple.",
 		c1+"/tct rename <newName>"+c2+" - Renames the temple to <newName>.",
 		c1+"/tct worldtotemple <temple>"+c2+" - Save current World as a temple.",
+		c1+"/tct textadd <shortname> <text>"+c2+"	 - Added long text for [TCML] signs.",
+		c1+"/tct textdel <shortname>"+c2+"	 - remove long text of [TCML] signs.",
+		c1+"/tct finishloc (del)"+c2+"	 - sets the finish location to your current position not in temple, or delete it with (del).",
 		c1+"/tct add <player>"+c2+"	 - Allows a player to edit your temple.",
 		c1+"/tct remove <player>"+c2+" - Disallows a player to edit your temple.",
 		c1+"/tct setmaxplayers <integer>"+c2+" - Sets max players per game.",
+		c1+"/tct setmaxdeath <integer>"+c2+" - Sets max deaths per player per game.",
 		c1+"/tct findsigblocks <radius>"+c2+" - Finds significant blocks."
 	};
 	public static int entsPerPage = 7;

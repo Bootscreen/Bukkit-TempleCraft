@@ -17,6 +17,7 @@ public class CustomMobType{
 	private int range = 20;
 	private int size = 0;
 	private String name = "";
+	private String oldabilitys = "";
 	private List<Pair<CustomMobAbility,Integer>> abilities_random = new ArrayList<Pair<CustomMobAbility,Integer>>();
 	private List<Pair<CustomMobAbility,Integer>> abilities_rotation = new ArrayList<Pair<CustomMobAbility,Integer>>();
 
@@ -74,6 +75,14 @@ public class CustomMobType{
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getOldabilitys() {
+		return oldabilitys;
+	}
+
+	public void setOldabilitys(String oldabilitys) {
+		this.oldabilitys = oldabilitys;
 	}
 
 	public List<Pair<CustomMobAbility,Integer>> getAbilities_rotation() {

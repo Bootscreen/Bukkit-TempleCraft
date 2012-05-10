@@ -8,6 +8,7 @@ comandDisabled=Du kannst diesen Befehl nicht im Tempel benutzen!
 
 joinFail=Derzeit laufen alle Tempel oder sind deaktiviert! Versuche es später noch einmal.
 mustBeEditing=Du musst im Bearbeitungsmodus sein um diesen Befehl nutzen zu können.
+mustNotBeEditing=Du darfst nicht im Bearbeitungsmodus sein um diesen Befehl nutzen zu können.
 mustBeOwner=Nur der Eigentümer von diesem Tempel kann diesen Befehl benutzen.
 mustLeaveTemple=Verlasse bitte diesen Tempel bevor du einen neuen erstellst.
 
@@ -39,7 +40,11 @@ convertingComplete=Der Tempel wurde umgewandelt.
 templeDeleted=Der Tempel %s wurde vernichtet!
 templeRenamed=Du hast diesen Tempel mit dem Namen %s umbenannt in %s.
 templeMaxPlayersSet=%s: Max-Player auf %d gesetzt.
+templemaxDeathsSet=%s: Max-Tode auf %d gesetzt.
+textadded=%s: Text hinzugefuegt.
+textremoved=%s: Text geloescht.
 templeFinishLocSet=%s: Finish Location wurde gestezt.
+templeFinishLocDel=%s: Finish Location wurde geloescht.
 maxTemplesOwned=Du kannst nicht mehr Tempel beherrschen!
 invalidInteger=Ungültiges Zahl ...
 incorrectArguments=Die Zahl der Argumente stimmen nicht.
@@ -95,6 +100,8 @@ game.treasureFound=%s hat einen Schatzblock gefunden!
 game.treasureMessage=Du musst %s einsammeln, bevor du gehen kannst!
 game.treasureReceived=Du hast %s für die Erforschung des Tempels erhalten!
 game.checkpoint=Checkpoint erreicht.
+game.tooMuchDeaths=Du bist leider zu oft in diesem Spiel gestorben.
+
 and=und
 game.message=Nachricht
 

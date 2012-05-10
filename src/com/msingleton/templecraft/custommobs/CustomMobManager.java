@@ -24,8 +24,12 @@ public class CustomMobManager {
 		this.CustomMobs.remove(cm);
 	}
 
-	public void Clear()
+	public void clear()
 	{
+		for(CustomMob cm : CustomMobs)
+		{
+			cm.remove();
+		}
 		this.CustomMobs.clear();
 	}
 

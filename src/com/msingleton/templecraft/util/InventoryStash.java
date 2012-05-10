@@ -46,6 +46,14 @@ public class InventoryStash {
 		return contents;
 	}
 
+	public void addContent(ItemStack item)
+	{
+		ItemStack[] result = new ItemStack[this.contents.length + 1];
+		System.arraycopy(contents, 0, result, 0, contents.length);
+		result[result.length-1] = item;
+		this.contents = result;
+	}
+	
 	public void setHelmet(ItemStack helmet)
 	{
 		this.helmet = helmet;

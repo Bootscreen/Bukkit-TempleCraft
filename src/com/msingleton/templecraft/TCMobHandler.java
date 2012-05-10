@@ -20,6 +20,14 @@ import com.msingleton.templecraft.util.Pair;
 
 public class TCMobHandler 
 {
+	
+	public static void SpawnMobs(Game game, Location loc, EntityType mob) 
+	{
+		MobSpawnProperties msp = new MobSpawnProperties();
+		msp.setEntityType(mob);
+		msp.setLocation(loc);
+		SpawnMobs(game, loc, msp);
+	}
 
 	public static void SpawnMobs(Game game, Location loc, MobSpawnProperties msp) 
 	{
@@ -27,25 +35,70 @@ public class TCMobHandler
 		{
 			if(msp.getAbilities_random().size() > 0 || msp.getAbilities_rotation().size() > 0)
 			{
-				SpawnMobs(game, loc, msp.getEntityType(), msp.getSize(), msp.getHealth(), msp.getDMGMulti(), msp.getAbilities_random(), msp.getAbilities_rotation());
+				SpawnMobs(game, loc, msp.getEntityType(), msp, msp.getSize(), msp.getHealth(), msp.getDMGMulti(), msp.getAbilities_random(), msp.getAbilities_rotation());
 			}
 			else
 			{
-				SpawnMobs(game, loc, msp.getEntityType(), msp.getSize(), msp.getHealth(), msp.getDMGMulti(), msp.getAbilitys());
+				SpawnMobs(game, loc, msp.getEntityType(), msp, msp.getSize(), msp.getHealth(), msp.getDMGMulti(), msp.getAbilitys());
 			}
 		}
 		else
 		{
-			SpawnMobs(game, loc, msp.getEntityType(), msp.getSize(), msp.getHealth(), msp.getCount(), msp.getTime());
+			if(msp.getCount() == 1 && msp.getTime() == 0)
+			{
+				try
+				{
+					LivingEntity e = game.world.spawnCreature(loc,msp.getEntityType());
+
+					if(e == null)
+						return;
+
+					Random r = new Random();
+					if(TempleCraft.economy != null && (TempleManager.mobGoldMin + TempleManager.mobGoldRan) != 0 && r.nextInt(3) == 0)
+					{
+						game.mobGoldMap.put(e.getEntityId(), r.nextInt(TempleManager.mobGoldRan)+TempleManager.mobGoldMin);
+					}
+
+					CustomMob cmob = new CustomMob(e);
+
+					cmob.setSpawnProperties(msp);
+
+					if(e instanceof Slime && msp.getSize() > 0)
+					{
+						Slime slime = (Slime) e;
+						slime.setSize(msp.getSize());
+						cmob.setSize(msp.getSize());
+					}
+
+					if(msp.getHealth() > 0)
+					{
+						cmob.setHealth(msp.getHealth());
+						game.customMobManager.AddMob(cmob);
+					}
+
+					if(!(e instanceof Creature))
+					{
+						return;
+					}
+					// Grab a random target.
+					Creature c = (Creature) e;
+					c.setTarget(TCUtils.getClosestPlayer(game, e));
+				}
+				catch(Exception e)
+				{
+					System.out.println("[TempleCraft] Could not spawn "+msp.getEntityType().getName());
+				}
+			}
+			else
+			{
+				int id = TempleCraft.TCScheduler.scheduleAsyncRepeatingTask(TempleCraft.TCPlugin, new SpawnTask(game, loc, msp, TempleCraft.TCPlugin), 0L, msp.getTime());
+				SpawnTask.taskID = id;
+				game.SpawnTaskIDs.add(id);
+			}
 		}
 	}
 
-	public static void SpawnMobs(Game game, Location loc, EntityType mob) 
-	{
-		SpawnMobs(game, loc, mob, -1, 0, 1, 0);
-	}
-	
-	public static void SpawnMobs(Game game, Location loc, EntityType mob, int size, int health, int dmgmulti, String abilitys) 
+	public static void SpawnMobs(Game game, Location loc, EntityType mob, MobSpawnProperties msp, int size, int health, int dmgmulti, String abilitys) 
 	{
 		try
 		{
@@ -53,15 +106,17 @@ public class TCMobHandler
 
 			if(e == null)
 				return;
-			
+
 			Random r = new Random();
 			if(TempleCraft.economy != null && (TempleManager.mobGoldMin + TempleManager.mobGoldRan) != 0 && r.nextInt(3) == 0)
 			{
 				game.mobGoldMap.put(e.getEntityId(), r.nextInt(TempleManager.mobGoldRan)+TempleManager.mobGoldMin);
 			}
-			
+
 			CustomMob cmob = new CustomMob(e);
-			
+
+			cmob.setSpawnProperties(msp);
+
 			if(e instanceof Slime && size > 0)
 			{
 				Slime slime = (Slime) e;
@@ -74,14 +129,14 @@ public class TCMobHandler
 				health = e.getMaxHealth();
 			}
 			cmob.setHealth(health);
-			
+
 			cmob.setDMGMultiplikator(dmgmulti);
-			
+
 			if(abilitys.length() > 0)
 			{
 				cmob.addAbilitysfromString(abilitys);
 			}
-			
+
 			game.customMobManager.AddMob(cmob);
 
 			if(!cmob.getAbilitys().isEmpty())
@@ -90,7 +145,7 @@ public class TCMobHandler
 				AbilityTask.taskID = id;
 				game.AbilityTaskIDs.put(cmob,id);
 			}
-			
+
 			if(!(e instanceof Creature))
 			{
 				return;
@@ -104,8 +159,8 @@ public class TCMobHandler
 			System.out.println("[TempleCraft] Could not spawn "+mob.getName());
 		}
 	}
-	
-	public static void SpawnMobs(Game game, Location loc, EntityType mob, int size, int health, int dmgmulti, List<Pair<CustomMobAbility, Integer>> abilities_random, List<Pair<CustomMobAbility, Integer>> abilities_rotation) 
+
+	public static void SpawnMobs(Game game, Location loc, EntityType mob, MobSpawnProperties msp, int size, int health, int dmgmulti, List<Pair<CustomMobAbility, Integer>> abilities_random, List<Pair<CustomMobAbility, Integer>> abilities_rotation) 
 	{
 		try
 		{
@@ -113,15 +168,17 @@ public class TCMobHandler
 
 			if(e == null)
 				return;
-			
+
 			Random r = new Random();
 			if(TempleCraft.economy != null && (TempleManager.mobGoldMin + TempleManager.mobGoldRan) != 0 && r.nextInt(3) == 0)
 			{
 				game.mobGoldMap.put(e.getEntityId(), r.nextInt(TempleManager.mobGoldRan)+TempleManager.mobGoldMin);
 			}
-			
+
 			CustomMob cmob = new CustomMob(e);
-			
+
+			cmob.setSpawnProperties(msp);
+
 			if(e instanceof Slime && size > 0)
 			{
 				Slime slime = (Slime) e;
@@ -134,23 +191,11 @@ public class TCMobHandler
 				health = e.getMaxHealth();
 			}
 			cmob.setHealth(health);
-			
-			cmob.setDMGMultiplikator(dmgmulti);
-			
-			/*if(abilitys.length() > 0)
-			{
-				cmob.addAbilitysfromString(abilitys);
-			}
 
-			if(!cmob.getAbilitys().isEmpty())
-			{
-				int id = TempleCraft.TCScheduler.scheduleAsyncRepeatingTask(TempleCraft.TCPlugin, new AbilityTask(game, cmob), 100L, 100L);
-				AbilityTask.taskID = id;
-				game.AbilityTaskIDs.put(cmob,id);
-			}*/
+			cmob.setDMGMultiplikator(dmgmulti);
 
 			game.customMobManager.AddMob(cmob);
-			
+
 			if(!(e instanceof Creature))
 			{
 				return;
@@ -164,63 +209,7 @@ public class TCMobHandler
 			System.out.println("[TempleCraft] Could not spawn "+mob.getName());
 		}
 	}
-	
-	public static void SpawnMobs(Game game, Location loc, EntityType mob, int size, int health, int count, long time) 
-	{
-		//for (int i = 0; i < playerSet.size(); i++)
-		//{
-		if(count == 1 && time == 0)
-		{
-			try
-			{
-				LivingEntity e = game.world.spawnCreature(loc,mob);
-				
-				if(e == null)
-					return;
 
-				Random r = new Random();
-				if(TempleCraft.economy != null && (TempleManager.mobGoldMin + TempleManager.mobGoldRan) != 0 && r.nextInt(3) == 0)
-				{
-					game.mobGoldMap.put(e.getEntityId(), r.nextInt(TempleManager.mobGoldRan)+TempleManager.mobGoldMin);
-				}
-
-				CustomMob cmob = new CustomMob(e);
-				
-				if(e instanceof Slime && size > 0)
-				{
-					Slime slime = (Slime) e;
-					slime.setSize(size);
-					cmob.setSize(size);
-				}
-
-				if(health > 0)
-				{
-					cmob.setHealth(health);
-					game.customMobManager.AddMob(cmob);
-				}
-				
-				if(!(e instanceof Creature))
-				{
-					return;
-				}
-				// Grab a random target.
-				Creature c = (Creature) e;
-				c.setTarget(TCUtils.getClosestPlayer(game, e));
-			}
-			catch(Exception e)
-			{
-				System.out.println("[TempleCraft] Could not spawn "+mob.getName());
-			}
-		}
-		else
-		{
-			int id = TempleCraft.TCScheduler.scheduleAsyncRepeatingTask(TempleCraft.TCPlugin, new SpawnTask(game, loc, mob, size, health, count, TempleCraft.TCPlugin), 0L, time);
-			SpawnTask.taskID = id;
-			game.SpawnTaskIDs.add(id);
-		}
-		//}
-	}
-	
 	public static EntityType getRandomCreature()
 	{
 		int dZombies, dSkeletons, dSpiders, dCreepers, dWolves, dCaveSpiders;
@@ -230,9 +219,9 @@ public class TCMobHandler
 		dCreepers = dSpiders + 5;
 		dWolves = dCreepers + 5;
 		dCaveSpiders = dWolves + 5;
-		
+
 		EntityType mob;
-		
+
 		int ran = new Random().nextInt(dCaveSpiders);
 		if	  (ran < dZombies)	 mob = EntityType.ZOMBIE;
 		else if (ran < dSkeletons)   mob = EntityType.SKELETON;
@@ -241,7 +230,7 @@ public class TCMobHandler
 		else if (ran < dWolves)	  mob = EntityType.WOLF;
 		else if (ran < dCaveSpiders) mob = EntityType.CAVE_SPIDER;
 		else return null;
-		
+
 		return mob;
 	}
 

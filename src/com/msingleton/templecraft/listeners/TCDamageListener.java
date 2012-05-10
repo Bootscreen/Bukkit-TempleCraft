@@ -93,14 +93,14 @@ public class TCDamageListener implements Listener
 					return;
 				}
 			}
-			
+
 			if(entity instanceof LivingEntity)
 			{
 				Game game = TCUtils.getGame(entity);
 				if(game != null)
 				{
 					CustomMob cmob = game.customMobManager.getMob(entity);
-				
+
 					if(cmob != null)
 					{
 						if(cmob.getDMGMultiplikator() > 1)
@@ -110,7 +110,7 @@ public class TCDamageListener implements Listener
 					}
 				}
 			}
-			
+
 			if(entity2 instanceof LivingEntity && ((LivingEntity)entity2).getHealth() > 0)
 			{
 				Game game = TCUtils.getGame(entity);
@@ -124,9 +124,9 @@ public class TCDamageListener implements Listener
 				}
 				game.lastDamager.remove(id);
 				game.lastDamager.put(id, entity);
-				
+
 				CustomMob cmob = game.customMobManager.getMob(entity2);
-				
+
 				if(cmob != null)
 				{
 					cmob.damage(event.getDamage(), entity);
@@ -152,6 +152,14 @@ public class TCDamageListener implements Listener
 		if (event.getEntity() instanceof LivingEntity)
 		{
 			LivingEntity e = (LivingEntity) event.getEntity();
+			if(e.getKiller() != null)
+			{
+				TCUtils.debugMessage("Entity " + e.getType().getName() + "dies by \"" + e.getKiller().getName() + "\"");
+			}
+			else
+			{
+				TCUtils.debugMessage("Entity " + e.getType().getName() + "dies");
+			}
 
 			event.getDrops().clear();
 
@@ -179,15 +187,21 @@ public class TCDamageListener implements Listener
 				lastDamager = game.lastDamager.remove(e.getEntityId());
 
 				CustomMob cmob = game.customMobManager.getMob(event.getEntity());
-				
+
 				if(cmob != null)
 				{
+					if(e.getKiller() == null)
+					{
+						game.mobSpawnpointMap.put(cmob.getSpawnProperties().getLocation(), cmob.getSpawnProperties());
+					}
+					
 					if(game.AbilityTaskIDs.containsKey(cmob))
 					{
 						TempleCraft.TCScheduler.cancelTask(game.AbilityTaskIDs.get(cmob));
 					}
 					game.customMobManager.RemoveMob(cmob);
 				}
+
 			}
 
 			if(game != null && lastDamager != null)

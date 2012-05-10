@@ -34,24 +34,27 @@ public class CustomMobUtils
 	{
 		YamlConfiguration c = YamlConfiguration.loadConfiguration(configFile);
 
-		if(c.isSet("bosses"))
-		{
-			return c.getConfigurationSection("bosses").getKeys(false);
-		}
-		else
+		if(!c.isSet("bosses"))
 		{
 			try 
 			{
-				c.createSection("bosses");
+				c.set("bosses.testBoss.Spawning.MobType", "Zombie");
+				c.set("bosses.testBoss.Spawning.DMGMultiplicator", 3);
+				c.set("bosses.testBoss.Spawning.MaxHealth", 200);
+				c.set("bosses.testBoss.Spawning.Size", 0);
+				c.set("bosses.testBoss.Spawning.Count", 1);
+				c.set("bosses.testBoss.Spawning.SpawnRange", 5);
+				c.set("bosses.testBoss.Spawning.Abilities", "");
 				c.save(configFile);
 			} 
 			catch (Exception e)
 			{
 				e.printStackTrace();
 			}
-			return c.getConfigurationSection("bosses").getKeys(false);
 		}
 		//return null;
+
+		return c.getConfigurationSection("bosses").getKeys(false);
 	}
 
 	private static Set<CustomMobType> getBosses(File configFile, String path)
@@ -75,20 +78,27 @@ public class CustomMobUtils
 				cmt.setSize(c.getInt(path + s + ".Spawning.Size", 0));
 				cmt.setCount(c.getInt(path + s + ".Spawning.Count", 1));
 				cmt.setRange(c.getInt(path + s + ".Spawning.SpawnRange", 1));
-				abilities_rotation_set = c.getConfigurationSection(path + s + ".Rotation").getValues(false);
-				for(String ability : abilities_rotation_set.keySet())
+				cmt.setOldabilitys(c.getString(path + s + ".Abilities", null));
+				if(c.isSet(path + s + ".Rotation"))
 				{
-					if(CustomMobAbility.fromString(ability) != null)
+					abilities_rotation_set = c.getConfigurationSection(path + s + ".Rotation").getValues(false);
+					for(String ability : abilities_rotation_set.keySet())
 					{
-						cmt.addAbilities_rotation(CustomMobAbility.fromString(ability), Integer.parseInt(abilities_rotation_set.get(ability).toString()));
+						if(CustomMobAbility.fromString(ability) != null)
+						{
+							cmt.addAbilities_rotation(CustomMobAbility.fromString(ability), Integer.parseInt(abilities_rotation_set.get(ability).toString()));
+						}
 					}
 				}
-				abilities_random_set = c.getConfigurationSection(path + s +".Random").getValues(false);
-				for(String ability : abilities_random_set.keySet())
+				if(c.isSet(path + s + ".Random"))
 				{
-					if(CustomMobAbility.fromString(ability) != null)
+					abilities_random_set = c.getConfigurationSection(path + s +".Random").getValues(false);
+					for(String ability : abilities_random_set.keySet())
 					{
-						cmt.addAbilities_random(CustomMobAbility.fromString(ability), Integer.parseInt(abilities_random_set.get(ability).toString()));
+						if(CustomMobAbility.fromString(ability) != null)
+						{
+							cmt.addAbilities_random(CustomMobAbility.fromString(ability), Integer.parseInt(abilities_random_set.get(ability).toString()));
+						}
 					}
 				}
 				result.add(cmt);

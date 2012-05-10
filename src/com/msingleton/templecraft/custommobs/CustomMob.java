@@ -7,6 +7,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 
 import com.msingleton.templecraft.TCUtils;
+import com.msingleton.templecraft.util.MobSpawnProperties;
 import com.msingleton.templecraft.util.Pair;
 
 
@@ -20,10 +21,16 @@ public class CustomMob{
 	private int size = 0;
 	private List<Pair<CustomMobAbility,Integer>> abilities_random = new ArrayList<Pair<CustomMobAbility,Integer>>();
 	private List<Pair<CustomMobAbility,Integer>> abilities_rotation = new ArrayList<Pair<CustomMobAbility,Integer>>();
+	private MobSpawnProperties spawnProperties = null;
 
 	public CustomMob(LivingEntity entity) 
 	{
 		this.entity = entity;
+	}
+	
+	public void remove()
+	{
+		this.entity.remove();
 	}
 
 	public void setHealth(int health) 
@@ -41,7 +48,7 @@ public class CustomMob{
 	{
 		return maxhealth;
 	}
-	
+
 	public void setDMGMultiplikator(int dmgmulti) 
 	{
 		this.dmgmulti = dmgmulti;
@@ -51,7 +58,7 @@ public class CustomMob{
 	{
 		return dmgmulti;
 	}
-	
+
 	public void setSize(int size) 
 	{
 		this.size = size;
@@ -104,7 +111,7 @@ public class CustomMob{
 			this.abilitys.add(ability);
 		}
 	}
-	
+
 	public void addAbilitysfromString(String abilitys)
 	{
 		String[] ability_split = abilitys.split(",");
@@ -119,19 +126,34 @@ public class CustomMob{
 		return TCUtils.getTarget(this.entity);
 	}
 
-	public List<Pair<CustomMobAbility,Integer>> getAbilities_rotation() {
+	public List<Pair<CustomMobAbility,Integer>> getAbilities_rotation() 
+	{
 		return abilities_rotation;
 	}
 
-	public void setAbilities_rotation(List<Pair<CustomMobAbility,Integer>> abilities_rotation) {
+	public void setAbilities_rotation(List<Pair<CustomMobAbility,Integer>> abilities_rotation) 
+	{
 		this.abilities_rotation = abilities_rotation;
 	}
 
-	public List<Pair<CustomMobAbility,Integer>> getAbilities_random() {
+	public List<Pair<CustomMobAbility,Integer>> getAbilities_random()
+	{
 		return abilities_random;
 	}
 
-	public void setAbilities_random(List<Pair<CustomMobAbility,Integer>> abilities_random) {
+	public void setAbilities_random(List<Pair<CustomMobAbility,Integer>> abilities_random) 
+	{
 		this.abilities_random = abilities_random;
+	}
+
+	public MobSpawnProperties getSpawnProperties() 
+	{
+		return spawnProperties;
+	}
+	
+
+	public void setSpawnProperties(MobSpawnProperties spawnProperties)
+	{
+		this.spawnProperties = spawnProperties;
 	}
 }
