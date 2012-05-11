@@ -101,7 +101,7 @@ public class TCDamageListener implements Listener
 				{
 					CustomMob cmob = game.customMobManager.getMob(entity);
 
-					if(cmob != null)
+					if(cmob != null && !cmob.isDead())
 					{
 						if(cmob.getDMGMultiplikator() > 1)
 						{
@@ -127,7 +127,7 @@ public class TCDamageListener implements Listener
 
 				CustomMob cmob = game.customMobManager.getMob(entity2);
 
-				if(cmob != null)
+				if(cmob != null && !cmob.isDead())
 				{
 					cmob.damage(event.getDamage(), entity);
 					event.setDamage(0);
@@ -188,9 +188,9 @@ public class TCDamageListener implements Listener
 
 				CustomMob cmob = game.customMobManager.getMob(event.getEntity());
 
-				if(cmob != null)
+				if(cmob != null && !cmob.isDead())
 				{
-					if(e.getKiller() == null)
+					if(e.getKiller() == null || !cmob.isDead())
 					{
 						game.mobSpawnpointMap.put(cmob.getSpawnProperties().getLocation(), cmob.getSpawnProperties());
 					}
@@ -199,9 +199,7 @@ public class TCDamageListener implements Listener
 					{
 						TempleCraft.TCScheduler.cancelTask(game.AbilityTaskIDs.get(cmob));
 					}
-					game.customMobManager.RemoveMob(cmob);
 				}
-
 			}
 
 			if(game != null && lastDamager != null)

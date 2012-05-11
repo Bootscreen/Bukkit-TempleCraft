@@ -150,12 +150,13 @@ public class WorldManager
 		{
 			regionfiles.remove(key);
 		}
-		
+
 		//Spout
 		try 
 		{
 			if (Bukkit.getServer().getPluginManager().isPluginEnabled("Spout")) 
 			{
+				TempleCraft.TCPlugin.log.info("[TempleCraft] try to remove spout reference for '" + worldname + "'!");
 				//Close the friggin' meta streams!
 				SimpleChunkDataManager manager = (SimpleChunkDataManager) SpoutManager.getChunkDataManager();
 				Field chunkstore = SimpleChunkDataManager.class.getDeclaredField("chunkStore");

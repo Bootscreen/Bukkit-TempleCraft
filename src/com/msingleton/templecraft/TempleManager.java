@@ -73,6 +73,7 @@ public class TempleManager
 	public static int rejoinCost;
 	public static int mobGoldMin = 0;
 	public static int mobGoldRan = 0;
+	public static int hitEndwaitingtime = 5;
 
 	/**
 	 * Initializes the TempleManager.
@@ -88,6 +89,7 @@ public class TempleManager
 			server				 = plugin.getServer();
 			
 			// Configuration
+			hitEndwaitingtime			= TCUtils.getInt(config, "settings.hitendwaitingtime", 5);
 			repairDelay			= TCUtils.getInt(config, "settings.repairdelay", 5);
 			maxEditWorlds		  = TCUtils.getInt(config, "settings.maxeditworlds", 2);
 			maxTemplesPerPerson	= TCUtils.getInt(config, "settings.maxtemplesperperson", 1);

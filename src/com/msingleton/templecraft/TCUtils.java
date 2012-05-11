@@ -893,6 +893,7 @@ public class TCUtils
 
 	public static boolean deleteTempWorld(World w)
 	{
+		String worldname = w.getName();
 		//TODO: optimze -.-
 		debugMessage("try deleting World " + w.getName());
 		removePlayers(w);
@@ -901,7 +902,7 @@ public class TCUtils
 			return false;
 		}
 		w.save();
-		File folder = new File(w.getName());
+		File folder = new File(worldname);
 		for(Entity e : w.getEntities())
 		{
 			e.remove();
@@ -914,17 +915,17 @@ public class TCUtils
 
 		if(TempleCraft.catacombs != null)
 		{
-			TempleCraft.catacombs.unloadWorld(w.getName());
+			TempleCraft.catacombs.unloadWorld(worldname);
 		}
 
 		/**/
 
 		if(TempleCraft.MVWM != null)
 		{
-			if(TempleCraft.MVWM.isMVWorld(w.getName()))
+			if(TempleCraft.MVWM.isMVWorld(worldname))
 			{
 				//TempleCraft.MVWM.removeWorldFromConfig(w.getName());
-				TempleCraft.MVWM.deleteWorld(w.getName(), true);
+				TempleCraft.MVWM.deleteWorld(worldname, true);
 			}
 			else
 			{
@@ -935,8 +936,16 @@ public class TCUtils
 		{
 			TempleManager.server.unloadWorld(w, true);
 		}
-
-		if(TempleManager.server.getWorld(w.getName()) != null)
+		
+		w = null;
+		
+		try
+		{
+			w = TempleManager.server.getWorld(worldname);
+		}
+		catch (Exception e) {}
+		
+		if(w != null)
 		{
 			debugMessage("error while unloading " + w.getName());
 			System.out.print("error while unloading " + w.getName());
@@ -944,7 +953,7 @@ public class TCUtils
 		}
 		else
 		{
-			System.out.println("[TempleCraft] World \""+w.getName()+"\" unloaded!");
+			System.out.println("[TempleCraft] World \""+worldname+"\" unloaded!");
 		}
 
 		if(folder.exists())
@@ -959,13 +968,13 @@ public class TCUtils
 				else
 				{
 					debugMessage(folder.getAbsolutePath() + " deleted.");
-					System.out.println("[TempleCraft] World \""+w.getName()+"\" deleted!");
+					System.out.println("[TempleCraft] World \""+worldname+"\" deleted!");
 				}
 			}
 			else
 			{
 				debugMessage(folder.getAbsolutePath() + " deleted.");
-				System.out.println("[TempleCraft] World \""+w.getName()+"\" deleted!");
+				System.out.println("[TempleCraft] World \""+worldname+"\" deleted!");
 			}
 		}
 

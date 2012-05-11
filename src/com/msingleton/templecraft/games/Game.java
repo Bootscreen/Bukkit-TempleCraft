@@ -38,7 +38,7 @@ import com.msingleton.templecraft.TempleCraft;
 import com.msingleton.templecraft.TempleManager;
 import com.msingleton.templecraft.TemplePlayer;
 import com.msingleton.templecraft.custommobs.CustomMob;
-import com.msingleton.templecraft.custommobs.CustomMobManager;
+import com.msingleton.templecraft.custommobs.MobManager;
 import com.msingleton.templecraft.custommobs.CustomMobType;
 import com.msingleton.templecraft.custommobs.CustomMobUtils;
 import com.msingleton.templecraft.util.MobArenaClasses;
@@ -83,8 +83,8 @@ public class Game
 	public int saveAmount = 5;
 
 	// Contains Active Mob Spawnpoints and Creature Types
-	//public Map<Location,Pair<Pair<Pair<EntityType,Integer>,String>,Pair<Integer,Pair<Integer,Integer>>>> mobSpawnpointMap	 = new HashMap<Location,Pair<Pair<Pair<EntityType,Integer>,String>,Pair<Integer,Pair<Integer,Integer>>>>();
 	public Map<Location,MobSpawnProperties> mobSpawnpointMap	 = new HashMap<Location,MobSpawnProperties>();
+	public Map<Location,MobSpawnProperties> mobSpawnpointConstantMap	 = new HashMap<Location,MobSpawnProperties>();
 	public Map<Integer, Integer> mobGoldMap			= new HashMap<Integer, Integer>();
 	public Map<Location, Integer> checkpointMap		= new HashMap<Location, Integer>();
 	public Map<Location, String[]> chatMap			 = new HashMap<Location, String[]>();
@@ -93,7 +93,6 @@ public class Game
 	public Map<Location, Integer> startLocMap		  = new HashMap<Location, Integer>();
 	public Map<Chunk, Entity[]> tempMobLoc		  = new HashMap<Chunk, Entity[]>();
 	public Map<Player, Integer> playerDeathMap		  = new HashMap<Player, Integer>();
-	//public Map<Location, Integer> LocHealthMap		  = new HashMap<Location, Integer>();
 
 	public Set<Player> playerSet		= new HashSet<Player>();
 	public Set<Player> readySet		 = new HashSet<Player>();
@@ -111,7 +110,7 @@ public class Game
 	public Set<Integer> SpawnTaskIDs   = new HashSet<Integer>();
 	public Map<CustomMob,Integer> AbilityTaskIDs   = new HashMap<CustomMob,Integer>();
 
-	public CustomMobManager customMobManager = new CustomMobManager();
+	public MobManager customMobManager = new MobManager();
 
 	public int maxdeaths = -1;
 
@@ -190,6 +189,7 @@ public class Game
 				AbilityTaskIDs.clear();
 			}
 			mobSpawnpointMap.clear();
+			mobSpawnpointConstantMap.clear();
 			mobSpawnpointSet.clear();
 			customMobManager.clear();
 			tempMobLoc.clear();
@@ -384,7 +384,7 @@ public class Game
 			msp.setEntityType(TCMobHandler.getRandomCreature());
 			msp.setLocation(b.getLocation());
 			mobSpawnpointMap.put(b.getLocation(),msp);
-			//mobSpawnpointMap.put(b.getLocation(),new Pair<Pair<Pair<EntityType,Integer>,String>,Pair<Integer,Pair<Integer,Integer>>>(new Pair<Pair<EntityType,Integer>,String>(new Pair<EntityType,Integer>(TCMobHandler.getRandomCreature(),-1),"0:1"),new Pair<Integer,Pair<Integer,Integer>>(20,new Pair<Integer,Integer>(0,1))));
+			mobSpawnpointConstantMap.put(b.getLocation(),msp);
 			b.setTypeId(0);
 		}
 		for(Block b: getBlockSet(diamondBlock))
@@ -486,6 +486,7 @@ public class Game
 					msp.setAbilitys(cmt.getOldabilitys());
 				}
 				mobSpawnpointMap.put(b.getLocation(),msp);
+				mobSpawnpointConstantMap.put(b.getLocation(),msp);
 				b.setTypeId(0);
 			}
 			else
@@ -573,7 +574,6 @@ public class Game
 				}
 				Location loc = new Location(b.getWorld(),b.getX()+.5,b.getY(),b.getZ()+.5);
 				mobSpawnpointSet.add(loc);
-				//mobSpawnpointMap.put(loc,new Pair<EntityType,Integer>(ct,range));
 
 				MobSpawnProperties msp = new MobSpawnProperties();
 				msp.setEntityType(TCMobHandler.getRandomCreature());
@@ -586,8 +586,7 @@ public class Game
 				msp.setIsbossmob(true);
 				msp.setLocation(b.getLocation());
 				mobSpawnpointMap.put(b.getLocation(),msp);
-				//mobSpawnpointMap.put(loc,new Pair<Pair<Pair<EntityType,Integer>,String>,Pair<Integer,Pair<Integer,Integer>>>(new Pair<Pair<EntityType,Integer>,String>(new Pair<EntityType,Integer>(ct,size),Lines[3]),new Pair<Integer,Pair<Integer,Integer>>(range,new Pair<Integer,Integer>(health,dmgmulti))));
-				//LocHealthMap.put(loc, health);
+				mobSpawnpointConstantMap.put(b.getLocation(),msp);
 				b.setTypeId(0);
 			}
 
@@ -811,9 +810,7 @@ public class Game
 			msp.setTime(time);
 			msp.setCount(count);
 			mobSpawnpointMap.put(b.getLocation(),msp);
-			//mobSpawnpointMap.put(loc,new Pair<EntityType,Integer>(ct,range));
-			//mobSpawnpointMap.put(loc,new Pair<Pair<Pair<EntityType,Integer>,String>,Pair<Integer,Pair<Integer,Integer>>>(new Pair<Pair<EntityType,Integer>,String>(new Pair<EntityType,Integer>(ct,size),time_count),new Pair<Integer,Pair<Integer,Integer>>(range,new Pair<Integer,Integer>(health,dmgmulti))));
-			//LocHealthMap.put(loc, health);
+			mobSpawnpointConstantMap.put(b.getLocation(),msp);
 			b.setTypeId(0);
 		}
 	}

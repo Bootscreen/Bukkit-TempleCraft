@@ -73,9 +73,10 @@ public class TCMobHandler
 					if(msp.getHealth() > 0)
 					{
 						cmob.setHealth(msp.getHealth());
-						game.customMobManager.AddMob(cmob);
 					}
-
+					
+					game.customMobManager.AddMob(cmob);
+					
 					if(!(e instanceof Creature))
 					{
 						return;

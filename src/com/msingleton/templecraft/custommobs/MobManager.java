@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.bukkit.entity.Entity;
 
-public class CustomMobManager {
+public class MobManager {
 
 	private List<CustomMob> CustomMobs = new ArrayList<CustomMob>();
 
@@ -16,6 +16,7 @@ public class CustomMobManager {
 
 	public void KillMob(CustomMob cm) 
 	{
+		cm.damage(cm.getHealth(), null);
 		RemoveMob(cm);
 	}
 
@@ -41,5 +42,10 @@ public class CustomMobManager {
 			}
 		}
 		return null;
+	}
+
+	public List<CustomMob> getMobs() 
+	{
+		return CustomMobs;
 	}
 }

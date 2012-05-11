@@ -27,7 +27,6 @@ import org.bukkit.scheduler.BukkitScheduler;
 import com.herocraftonline.heroes.Heroes;
 import com.herocraftonline.heroes.characters.CharacterManager;
 import com.msingleton.templecraft.listeners.TCBlockListener;
-import com.msingleton.templecraft.listeners.TCChunkListener;
 import com.msingleton.templecraft.listeners.TCDamageListener;
 import com.msingleton.templecraft.listeners.TCDisconnectListener;
 import com.msingleton.templecraft.listeners.TCInventoryListener;
@@ -66,7 +65,7 @@ public class TempleCraft extends JavaPlugin
 	public static Catacombs catacombs = null;
 	public static WorldGuardPlugin worldguard = null;
 	public static Economy economy = null;
-	public static CharacterManager heroManager;
+	public static CharacterManager heroManager = null;
 	public static String language;
 	public static String fileExtention = ".tcf";
 	public static ChatColor c1 = ChatColor.DARK_AQUA;
@@ -129,7 +128,7 @@ public class TempleCraft extends JavaPlugin
 
 		pm.registerEvents(new MobArenaClasses(this), this);
 		pm.registerEvents(new TCBlockListener(), this);
-		pm.registerEvents(new TCChunkListener(), this);
+		//pm.registerEvents(new TCChunkListener(), this);
 		pm.registerEvents(new TCDamageListener(), this);
 		pm.registerEvents(new TCDisconnectListener(this), this);
 		pm.registerEvents(new TCEnabledCommands(this), this);
@@ -217,6 +216,7 @@ public class TempleCraft extends JavaPlugin
 		language = TCUtils.getString(configFile, "settings.language", "en-US");
 		Translation.reload(new File(getDataFolder(), "templecraft-"+language+".csv"));
 
+		
 		if(Translation.getVersion()<1)
 		{
 			TCUtils.copyFromJarToDisk("templecraft-"+language+".csv", getDataFolder());

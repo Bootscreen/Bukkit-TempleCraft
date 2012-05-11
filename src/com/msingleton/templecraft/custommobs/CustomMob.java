@@ -15,6 +15,7 @@ public class CustomMob{
 
 	private LivingEntity entity;
 	private List<CustomMobAbility> abilitys = new ArrayList<CustomMobAbility>();
+	private boolean dead = false;
 	private int health = 0;
 	private int maxhealth = 0;
 	private int dmgmulti = 0;
@@ -31,6 +32,21 @@ public class CustomMob{
 	public void remove()
 	{
 		this.entity.remove();
+	}
+
+	public boolean isEntityDead() 
+	{
+		return entity.isDead();
+	}
+	
+	public boolean isDead() 
+	{
+		return dead;
+	}
+
+	public void setDead(boolean dead) 
+	{
+		this.dead = dead;
 	}
 
 	public void setHealth(int health) 
@@ -76,12 +92,8 @@ public class CustomMob{
 			health -= value;
 			if (health <= 0) 
 			{
-				entity.setHealth(0);
-				/*entity.damage(entity.getMaxHealth()+1);
-				if(entity instanceof EnderDragon)
-				{
-					entity.setHealth(0);
-				}*/
+				this.dead = true;
+				entity.damage(entity.getMaxHealth());
 			}
 		}
 	}
