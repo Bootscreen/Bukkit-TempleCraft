@@ -9,6 +9,7 @@ import org.bukkit.entity.Creature;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Slime;
+import org.bukkit.entity.Wolf;
 
 import com.msingleton.templecraft.custommobs.CustomMob;
 import com.msingleton.templecraft.custommobs.CustomMobAbility;
@@ -69,6 +70,11 @@ public class TCMobHandler
 						slime.setSize(msp.getSize());
 						cmob.setSize(msp.getSize());
 					}
+					if(e instanceof Wolf)
+					{
+						Wolf wolf = (Wolf) e;
+						wolf.setAngry(true);
+					}
 
 					if(msp.getHealth() > 0)
 					{
@@ -123,6 +129,11 @@ public class TCMobHandler
 				Slime slime = (Slime) e;
 				slime.setSize(size);
 				cmob.setSize(size);
+			}
+			if(e instanceof Wolf)
+			{
+				Wolf wolf = (Wolf) e;
+				wolf.setAngry(true);
 			}
 
 			if(health <= 0)
@@ -185,6 +196,11 @@ public class TCMobHandler
 				Slime slime = (Slime) e;
 				slime.setSize(size);
 				cmob.setSize(size);
+			}
+			if(e instanceof Wolf)
+			{
+				Wolf wolf = (Wolf) e;
+				wolf.setAngry(true);
 			}
 
 			if(health <= 0)
