@@ -470,7 +470,7 @@ public class TCCommands implements CommandExecutor
 				return true;
 			}
 
-			if(args[2].equals("delete") || args[2].equals("del"))
+			if(args.length == 3 && (args[2].equals("delete") || args[2].equals("del")))
 			{
 				TCUtils.setFinishLocation(temple, null);
 				TempleManager.tellPlayer(p, Translation.tr("templeFinishLocDel",arg));
