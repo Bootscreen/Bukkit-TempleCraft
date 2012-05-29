@@ -102,6 +102,7 @@ game.treasureReceived=Du hast %s für die Erforschung des Tempels erhalten!
 game.checkpoint=Checkpoint erreicht.
 game.tooMuchDeaths=Du bist leider zu oft in diesem Spiel gestorben.
 game.hitendblock=Du hast den End-Block berührt. Das Spiel braucht %d Sekunden um dies zu registrieren, sei also vorsichtig ;)
+game.alreadyhitendblock=Du hast den End-Block bereits berührt. Sei also weiterhin vorsichtig ;)
 
 and=und
 game.message=Nachricht

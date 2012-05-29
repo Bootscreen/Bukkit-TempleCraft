@@ -913,10 +913,10 @@ public class TCUtils
 			w.unloadChunk(chunk);
 		}
 
-		if(TempleCraft.catacombs != null)
+		/*if(TempleCraft.catacombs != null)
 		{
 			TempleCraft.catacombs.unloadWorld(worldname);
-		}
+		}*/
 
 		/**/
 
@@ -936,15 +936,15 @@ public class TCUtils
 		{
 			TempleManager.server.unloadWorld(w, true);
 		}
-		
+
 		w = null;
-		
+
 		try
 		{
 			w = TempleManager.server.getWorld(worldname);
 		}
 		catch (Exception e) {}
-		
+
 		if(w != null)
 		{
 			debugMessage("error while unloading " + w.getName());
@@ -1598,7 +1598,18 @@ public class TCUtils
 
 	public static void debugMessage(String message)
 	{
-		debugMessage(Thread.currentThread().getStackTrace()[2].getClassName() + " - " + Thread.currentThread().getStackTrace()[2].getMethodName() + " - " + Thread.currentThread().getStackTrace()[2].getLineNumber() + " - " + message, Level.INFO);
+		if(Thread.currentThread().getStackTrace().length == 2)
+		{
+			debugMessage(Thread.currentThread().getStackTrace()[2].getClassName() + "########" + Thread.currentThread().getStackTrace()[2].getMethodName() + "########" + Thread.currentThread().getStackTrace()[2].getLineNumber() + "########" + message, Level.INFO);
+		}
+		else if(Thread.currentThread().getStackTrace().length == 1)
+		{
+			debugMessage(Thread.currentThread().getStackTrace()[1].getClassName() + "########" + Thread.currentThread().getStackTrace()[1].getMethodName() + "########" + Thread.currentThread().getStackTrace()[1].getLineNumber() + "########" + message, Level.INFO);
+		}
+		else if(Thread.currentThread().getStackTrace().length == 0)
+		{
+			debugMessage(Thread.currentThread().getStackTrace()[0].getClassName() + "########" + Thread.currentThread().getStackTrace()[0].getMethodName() + "########" + Thread.currentThread().getStackTrace()[0].getLineNumber() + "########" + message, Level.INFO);
+		}
 	}
 
 	public static void debugMessage(String message, Level loglevel)
@@ -1607,11 +1618,25 @@ public class TCUtils
 		{
 			if(loglevel.equals(Level.INFO))
 			{
-				TempleCraft.debuglog.log(loglevel, message);
+				String split[] = message.split("########", 4);
+				if(split.length == 4)
+				{
+					TempleCraft.debuglog.log(loglevel, message);
+					return;
+				}
 			}
-			else
+
+			if(Thread.currentThread().getStackTrace().length == 2)
 			{
-				TempleCraft.debuglog.log(loglevel, Thread.currentThread().getStackTrace()[2].getClassName() + " - " + Thread.currentThread().getStackTrace()[2].getMethodName() + " - " + Thread.currentThread().getStackTrace()[2].getLineNumber() + " - " + message);
+				TempleCraft.debuglog.log(loglevel, Thread.currentThread().getStackTrace()[2].getClassName() + "########" + Thread.currentThread().getStackTrace()[2].getMethodName() + "########" + Thread.currentThread().getStackTrace()[2].getLineNumber() + "########" + message);
+			}
+			else if(Thread.currentThread().getStackTrace().length == 1)
+			{
+				TempleCraft.debuglog.log(loglevel, Thread.currentThread().getStackTrace()[1].getClassName() + "########" + Thread.currentThread().getStackTrace()[1].getMethodName() + "########" + Thread.currentThread().getStackTrace()[1].getLineNumber() + "########" + message);
+			}
+			else if(Thread.currentThread().getStackTrace().length == 0)
+			{
+				TempleCraft.debuglog.log(loglevel, Thread.currentThread().getStackTrace()[0].getClassName() + "########" + Thread.currentThread().getStackTrace()[0].getMethodName() + "########" + Thread.currentThread().getStackTrace()[0].getLineNumber() + "########" + message);
 			}
 		}
 	}

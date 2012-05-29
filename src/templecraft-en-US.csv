@@ -101,7 +101,8 @@ game.treasureMessage=You will receive %s if you get out alive!
 game.treasureReceived=You received %s for completing the temple!
 game.checkpoint=Checkpoint Reached
 game.tooMuchDeaths=Sorry but you died too much.
-game.hitendblock=You hit the End-Block. The game needs 5 Seconds to register it, so be careful ;)
+game.hitendblock=You hit the End-Block. The game needs %d Seconds to register it, so be careful ;)
+game.alreadyhitendblock=You already hit the End-Block. so be careful ;)
 
 and=and
 game.message=Message

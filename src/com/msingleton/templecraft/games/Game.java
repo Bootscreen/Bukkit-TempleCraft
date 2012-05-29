@@ -97,6 +97,7 @@ public class Game
 	public Set<Player> playerSet		= new HashSet<Player>();
 	public Set<Player> readySet		 = new HashSet<Player>();
 	public Set<Player> deadSet		  = new HashSet<Player>();
+	public Set<Player> endSet		  = new HashSet<Player>();
 	public Set<Player> rewardSet		= new HashSet<Player>();
 	public Set<LivingEntity> monsterSet = new HashSet<LivingEntity>();
 

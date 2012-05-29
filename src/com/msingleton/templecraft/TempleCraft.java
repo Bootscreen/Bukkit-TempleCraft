@@ -14,7 +14,6 @@ import java.util.logging.Logger;
 
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
-import net.steeleyes.catacombs.Catacombs;
 
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
@@ -62,7 +61,7 @@ public class TempleCraft extends JavaPlugin
 	public static TempleCraft TCPlugin = null;
 	public static Permission permission = null;
 	public static MVWorldManager MVWM = null;
-	public static Catacombs catacombs = null;
+	//public static Catacombs catacombs = null;
 	public static WorldGuardPlugin worldguard = null;
 	public static Economy economy = null;
 	public static CharacterManager heroManager = null;
@@ -118,7 +117,7 @@ public class TempleCraft extends JavaPlugin
 		setupEconomy();
 		setupHeroes();
 		setupMultiverse();
-		setupCatacombs();
+		//setupCatacombs();
 		setupWorldguard();
 
 		ENABLED_COMMANDS = TCUtils.getEnabledCommands();
@@ -154,7 +153,7 @@ public class TempleCraft extends JavaPlugin
 					public String format(LogRecord record) {
 						SimpleDateFormat sd = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 						String dateString = sd.format(new Date(record.getMillis())); 
-						String split[] = record.getMessage().split(" - ", 4);
+						String split[] = record.getMessage().split("########", 4);
 						return dateString + " " + split[0] + " " + split[1] + " Line " + split[2] + "\n"
 						+ record.getLevel() + ": " + split[3] + "\n\n";
 					}
@@ -240,7 +239,7 @@ public class TempleCraft extends JavaPlugin
 		}
 	}
 
-	private void setupCatacombs()
+	/*private void setupCatacombs()
 	{
 		Plugin Cataplugin = this.getServer().getPluginManager().getPlugin("Catacombs");
 		if (Cataplugin != null)
@@ -248,7 +247,7 @@ public class TempleCraft extends JavaPlugin
 			catacombs = (Catacombs) Cataplugin;
 			log.info("[TempleCraft] Hooked into " + Cataplugin.getDescription().getName() + " Version "+ Cataplugin.getDescription().getVersion());
 		}
-	}
+	}*/
 
 	private void setupWorldguard()
 	{

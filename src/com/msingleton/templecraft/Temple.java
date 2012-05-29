@@ -193,11 +193,10 @@ public class Temple
 				{
 					TempleCraft.MVWM.addWorld(result.getName(), result.getEnvironment(), Long.toString(result.getSeed()), result.getWorldType(), false, null, true);
 				}
-				if(TempleCraft.catacombs != null)
+				/*if(TempleCraft.catacombs != null)
 				{
 					TempleCraft.catacombs.loadWorld(result.getName());
-				}
-				System.out.println("[TempleCraft] World \""+worldName+"\" Loaded!");
+				}*/				System.out.println("[TempleCraft] World \""+worldName+"\" Loaded!");
 			}
 			catch (Exception e) 
 			{
@@ -218,10 +217,10 @@ public class Temple
 			{
 				TempleCraft.MVWM.addWorld(result.getName(), result.getEnvironment(), Long.toString(result.getSeed()), result.getWorldType(), false, null, true);
 			}
-			if(TempleCraft.catacombs != null)
+			/*if(TempleCraft.catacombs != null)
 			{
 				TempleCraft.catacombs.loadWorld(result.getName());
-			}
+			}*/
 			TCRestore.loadTemple(new Location(result,0,0,0), this);
 		}
 		else

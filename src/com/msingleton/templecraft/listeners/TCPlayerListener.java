@@ -194,8 +194,16 @@ public class TCPlayerListener implements Listener
 		}
 		else if (!game.deadSet.contains(p) && b.getTypeId() == 41 && game.endLocSet.contains(b.getLocation()))
 		{
-			TempleManager.tellPlayer(p, Translation.tr("game.hitendblock",TempleManager.hitEndwaitingtime));
-			TempleCraft.TCScheduler.scheduleAsyncDelayedTask(TempleCraft.TCPlugin, new EndTask(game, p), TempleManager.hitEndwaitingtime*20);
+			if(!game.endSet.contains(p))
+			{
+				game.endSet.add(p);
+				TempleManager.tellPlayer(p, Translation.tr("game.hitendblock",TempleManager.hitEndwaitingtime));
+				TempleCraft.TCScheduler.scheduleAsyncDelayedTask(TempleCraft.TCPlugin, new EndTask(game, p), TempleManager.hitEndwaitingtime*20);
+			}
+			else
+			{
+				TempleManager.tellPlayer(p, Translation.tr("game.alreadyhitendblock",TempleManager.hitEndwaitingtime));
+			}
 			event.setCancelled(true);
 			return;
 		}

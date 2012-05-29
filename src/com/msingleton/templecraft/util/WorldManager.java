@@ -66,7 +66,7 @@ public class WorldManager
 	public static boolean init()
 	{
     	TempleCraft.TCPlugin.log.info("[TempleCraft] Try to init WorldManager!");
-    	TCUtils.debugMessage("Try to init WorldManager.", Level.INFO);
+    	TCUtils.debugMessage("Try to init WorldManager.");
 		try 
 		{
         	Field a = net.minecraft.server.RegionFileCache.class.getDeclaredField("a");
@@ -100,6 +100,7 @@ public class WorldManager
 	@SuppressWarnings("unchecked")
 	public static boolean clearWorldReference(World world) 
 	{
+		init();
 		String worldname = world.getName();
 		TempleCraft.TCPlugin.log.info("[TempleCraft] try to remove world reference for '" + worldname + "'!");
 		TCUtils.debugMessage("[TempleCraft] try to remove world reference for '" + worldname + "'!");
